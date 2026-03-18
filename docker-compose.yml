@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+
+  registry:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.registry
+    ports:
+      - "5001:5001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  hello-service-1:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+    environment:
+      - SERVICE_NAME=hello-service
+      - SERVICE_PORT=8001
+      - REGISTRY_URL=http://registry:5001
+    ports:
+      - "8001:8001"
+    depends_on:
+      registry:
+        condition: service_healthy
+
+  hello-service-2:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+    environment:
+      - SERVICE_NAME=hello-service
+      - SERVICE_PORT=8002
+      - REGISTRY_URL=http://registry:5001
+    ports:
+      - "8002:8002"
+    depends_on:
+      registry:
+        condition: service_healthy
+
+  client:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.client
+    environment:
+      - REGISTRY_URL=http://registry:5001
+    depends_on:
+      - hello-service-1
+      - hello-service-2
+    profiles:
+      - demo   # run manually: docker compose --profile demo up client

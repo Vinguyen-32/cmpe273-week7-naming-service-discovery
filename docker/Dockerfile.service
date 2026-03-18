@@ -1,0 +1,7 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY service/ ./service/
+EXPOSE 8001
+CMD ["sh", "-c", "python service/service.py --name ${SERVICE_NAME:-hello-service} --port ${SERVICE_PORT:-8001}"]
