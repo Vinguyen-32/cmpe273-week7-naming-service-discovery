@@ -150,6 +150,7 @@ curl http://localhost:8002/hello
 # Instance info (name, uptime)
 curl http://localhost:8001/info
 curl http://localhost:8002/info
+```
 
 ## Optional: Service Mesh (Istio)
 
@@ -159,3 +160,6 @@ With Istio, discovery moves out of the application code:
 - Kubernetes DNS + Istio `VirtualService` replace the custom registry
 
 See `docs/ISTIO.md` for a starter config.
+
+
+
