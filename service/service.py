@@ -39,7 +39,6 @@ class MicroService:
         self.app = Flask(__name__)
         self._setup_routes()
 
-    # ── Flask routes ──────────────────────────────────────────────────────────
 
     def _setup_routes(self):
         app = self.app
@@ -66,8 +65,7 @@ class MicroService:
                 "uptime": round(time.time() - svc._start_time, 1),
             })
 
-    # ── Registry interaction ──────────────────────────────────────────────────
-
+ 
     def _register(self):
         for attempt in range(5):
             try:
@@ -108,7 +106,6 @@ class MicroService:
         except Exception as exc:
             self.log.warning("Deregister failed: %s", exc)
 
-    # ── Lifecycle ─────────────────────────────────────────────────────────────
 
     def start(self):
         self._start_time = time.time()

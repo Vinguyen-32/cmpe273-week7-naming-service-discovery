@@ -102,6 +102,55 @@ docker compose --profile demo up client
 3. **Discovery** — The client calls `GET /discover/hello-service` to get the live instance list.
 4. **Random selection** — The client picks a random instance (`random.choice`) and calls it directly.
 
+## Testing with curl (Terminal 5)
+
+### Registry endpoints (port 5001)
+```bash
+# Check registry is alive
+curl http://localhost:5001/health
+
+# List all registered services
+curl http://localhost:5001/services
+
+# Discover all instances of hello-service
+curl http://localhost:5001/discover/hello-service
+```
+
+### Manually register a fake service
+```bash
+curl -X POST http://localhost:5001/register \
+  -H "Content-Type: application/json" \
+  -d '{"service": "test-service", "address": "http://localhost:9999"}'
+```
+
+### Send a heartbeat for it
+```bash
+curl -X POST http://localhost:5001/heartbeat \
+  -H "Content-Type: application/json" \
+  -d '{"service": "test-service", "address": "http://localhost:9999"}'
+```
+
+### Deregister it
+```bash
+curl -X POST http://localhost:5001/deregister \
+  -H "Content-Type: application/json" \
+  -d '{"service": "test-service", "address": "http://localhost:9999"}'
+```
+
+### Call the service instances directly (port 8001 / 8002)
+```bash
+# Health check on each instance
+curl http://localhost:8001/health
+curl http://localhost:8002/health
+
+# The actual hello endpoint
+curl http://localhost:8001/hello
+curl http://localhost:8002/hello
+
+# Instance info (name, uptime)
+curl http://localhost:8001/info
+curl http://localhost:8002/info
+
 ## Optional: Service Mesh (Istio)
 
 With Istio, discovery moves out of the application code:

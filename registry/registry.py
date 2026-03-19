@@ -21,8 +21,6 @@ lock = threading.Lock()
 HEARTBEAT_TIMEOUT = 30  # seconds — instance considered dead after this
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
-
 def _cleanup_stale():
     """Background thread: remove instances that stopped sending heartbeats."""
     while True:
@@ -41,8 +39,6 @@ def _cleanup_stale():
 
 threading.Thread(target=_cleanup_stale, daemon=True).start()
 
-
-# ── Endpoints ─────────────────────────────────────────────────────────────────
 
 @app.route("/health")
 def health():
